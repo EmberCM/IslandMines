@@ -1,0 +1,390 @@
+###########################################
+#                                         #
+#           Plugin made by Ember          #
+#                                         #
+###########################################
+
+mines:
+  Basic:
+    size: 10
+    height: 20
+    lifespan: 5 # In minutes
+    automatic-reset: 1 # In minutes
+    manual-reset-delay: 1 # In minutes
+    sign-text:
+      - "&aClick Here to"
+      - "&aReset Mine"
+    item:
+      material: beacon
+      glow: true
+      name: "&6&lPersonal Mine"
+      lore:
+        - "&eSize: &f10x10"
+        - "&7&oPlace to get your own personal mine"
+    upgrades:
+      coal_ore:
+        price: 0
+        blocks: 0
+        fill: coal_ore
+      iron_ore:
+        price: 20000
+        blocks: 200
+        fill: iron_ore
+      gold_ore:
+        price: 30000
+        blocks: 200
+        fill: gold_ore
+      redstone_ore:
+        price: 40000
+        blocks: 200
+        fill: redstone_ore
+      diamond_ore:
+        price: 50000
+        blocks: 200
+        fill: diamond_ore
+      emerald_ore:
+        price: 60000
+        blocks: 200
+        fill: emerald_ore
+      coal_block:
+        price: 70000
+        blocks: 200
+        fill: coal_block
+      iron_block:
+        price: 80000
+        blocks: 200
+        fill: iron_block
+      gold_block:
+        price: 90000
+        blocks: 200
+        fill: gold_block
+      redstone_block:
+        price: 100000
+        blocks: 200
+        fill: redstone_block
+      diamond_block:
+        price: 110000
+        blocks: 200
+        fill: diamond_block
+      emerald_block:
+        price: 120000
+        blocks: 200
+        fill: emerald_block
+      obsidian:
+        price: 130000
+        blocks: 200
+        fill: obsidian
+    storage-inventory:
+      size: 54
+      title: "&a&lMine &b&lStorage"
+      fillers:
+        slot: "0-10,16-19,25-28,34-53"
+        name: " "
+        material: stained_glass_pane
+        durability: 15
+      menuitems:
+        info:
+          coal_ore:
+            slot: 11
+            material: coal_ore
+            name: "&b<&l!&b> Coal Ore"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          iron_ore:
+            slot: 12
+            material: iron_ore
+            name: "&b<&l!&b> Iron Ore"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          gold_ore:
+            slot: 13
+            material: gold_ore
+            name: "&b<&l!&b> Gold Ore"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          redstone_ore:
+            slot: 14
+            material: redstone_ore
+            name: "&b<&l!&b> Redstone Ore"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          diamond_ore:
+            slot: 15
+            material: diamond_ore
+            name: "&b<&l!&b> Diamond Ore"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          emerald_ore:
+            slot: 20
+            material: emerald_ore
+            name: "&b<&l!&b> Emerald Ore"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          coal_block:
+            slot: 21
+            material: coal_block
+            name: "&b<&l!&b> Coal Block"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          iron_block:
+            slot: 22
+            material: iron_block
+            name: "&b<&l!&b> Iron Block"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          gold_block:
+            slot: 23
+            material: gold_block
+            name: "&b<&l!&b> Gold Block"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          redstone_block:
+            slot: 24
+            material: redstone_block
+            name: "&b<&l!&b> Redstone Block"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          diamond_block:
+            slot: 29
+            material: diamond_block
+            name: "&b<&l!&b> Diamond Block"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          emerald_block:
+            slot: 30
+            material: emerald_block
+            name: "&b<&l!&b> Emerald Block"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          obsidian:
+            slot: 31
+            material: obsidian
+            name: "&b<&l!&b> Obsidian"
+            lore:
+              - "&d* &b&lQuantity {quantity}x"
+              - "&d* &b&lWorth &6${worth}"
+          sellall:
+            slot: 49
+            material: sign
+            name: "&e&l<!> Sell All"
+            lore:
+              - ""
+              - "&7Click to sell all your stored items"
+              - ""
+              - "&2* &e&lSTORED WORTH &b&l${worth_total}"
+    upgrade-inventory:
+      size: 45
+      title: "&a&lMine &b&lUpgrade"
+      fillers:
+        slot: "0-10,16-19,25-28,34-44"
+        name: " "
+        material: stained_glass_pane
+        durability: 15
+      upgrades:
+        coal_ore:
+          slot: 11
+          unlocked:
+            material: coal_ore
+            name: "&a&lUPGRADE&f: &2&l&nCoal Ore"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: coal_ore
+            name: "&a&lUPGRADE&f: &2&l&nCoal Ore"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"
+        iron_ore:
+          slot: 12
+          unlocked:
+            material: iron_ore
+            name: "&a&lUPGRADE&f: &2&l&nIron Ore"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: iron_ore
+            name: "&a&lUPGRADE&f: &2&l&nIron Ore"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"
+        gold_ore:
+          slot: 13
+          unlocked:
+            material: gold_ore
+            name: "&a&lUPGRADE&f: &2&l&nGold Ore"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: gold_ore
+            name: "&a&lUPGRADE&f: &2&l&nGold Ore"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"
+        redstone_ore:
+          slot: 14
+          unlocked:
+            material: redstone_ore
+            name: "&a&lUPGRADE&f: &2&l&nRedstone Ore"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: redstone_ore
+            name: "&a&lUPGRADE&f: &2&l&nRedstone Ore"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"
+        diamond_ore:
+          slot: 15
+          unlocked:
+            material: diamond_ore
+            name: "&a&lUPGRADE&f: &2&l&nDiamond Ore"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: diamond_ore
+            name: "&a&lUPGRADE&f: &2&l&nDiamond Ore"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"
+        emerald_ore:
+          slot: 20
+          unlocked:
+            material: emerald_ore
+            name: "&a&lUPGRADE&f: &2&l&nEmerald Ore"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: emerald_ore
+            name: "&a&lUPGRADE&f: &2&l&nEmerald Ore"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"
+        coal_block:
+          slot: 21
+          unlocked:
+            material: coal_block
+            name: "&a&lUPGRADE&f: &2&l&nCoal Block"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: coal_block
+            name: "&a&lUPGRADE&f: &2&l&nCoal Block"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"
+        iron_block:
+          slot: 22
+          unlocked:
+            material: iron_block
+            name: "&a&lUPGRADE&f: &2&l&nIron Block"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: iron_block
+            name: "&a&lUPGRADE&f: &2&l&nIron Block"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"
+        gold_block:
+          slot: 23
+          unlocked:
+            material: gold_block
+            name: "&a&lUPGRADE&f: &2&l&nGold Block"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: gold_block
+            name: "&a&lUPGRADE&f: &2&l&nGold Block"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"
+        redstone_block:
+          slot: 24
+          unlocked:
+            material: redstone_block
+            name: "&a&lUPGRADE&f: &2&l&nRedstone Block"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: redstone_block
+            name: "&a&lUPGRADE&f: &2&l&nRedstone Block"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"
+        diamond_block:
+          slot: 29
+          unlocked:
+            material: diamond_block
+            name: "&a&lUPGRADE&f: &2&l&nDiamond Block"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: diamond_block
+            name: "&a&lUPGRADE&f: &2&l&nDiamond Block"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"
+        emerald_block:
+          slot: 30
+          unlocked:
+            material: emerald_block
+            name: "&a&lUPGRADE&f: &2&l&nEmerald Block"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: emerald_block
+            name: "&a&lUPGRADE&f: &2&l&nEmerald Block"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"
+        obsidian:
+          slot: 31
+          unlocked:
+            material: obsidian
+            name: "&a&lUPGRADE&f: &2&l&nObsidian"
+            lore:
+              - "&f&m* &a&mCost&f&m: &2&m${cost}"
+              - "&f&m* &a&mMined&f&m: &2&m{blocks}&f&m/&2&m{blocks}"
+              - "&7&o(( You have already purchased this upgrade))"
+          locked:
+            material: obsidian
+            name: "&a&lUPGRADE&f: &2&l&nObsidian"
+            lore:
+              - "&f* &aCost&f: &2${cost}"
+              - "&f* &aMined&f: &2{progress}&f/&2{blocks}"

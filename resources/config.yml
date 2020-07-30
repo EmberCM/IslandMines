@@ -1,0 +1,61 @@
+###########################################
+#                                         #
+#           Plugin made by Ember          #
+#                                         #
+###########################################
+
+main-inventory:
+  size: 27
+  title: "&a&lYour Personal &2&lMine"
+  fillers:
+    slot: "borders"
+    name: " "
+    material: stained_glass_pane
+    durability: 15
+  menuitems:
+    info:
+      upgrade:
+        slot: 10
+        material: nether_star
+        name: "&a&lMine &2&lUpgrade"
+        lore:
+          - "&7&o(( Tip: Click me to open the Upgrade GUI ))"
+      reset:
+        slot: 13
+        material: diamond_pickaxe
+        name: "&a&lMine &2&lReset"
+        lore:
+          - "&7&o(( Tip: Click me to reset the mine ))"
+      storage:
+        slot: 16
+        material: chest
+        name: "&a&lMine &2&lStorage"
+        lore:
+          - "&7&o(( Tip: Click me to access your mine's storage ))"
+      remove:
+        slot: 22
+        material: barrier
+        name: "&4&l&nREMOVE MINE"
+        lore:
+          - "&7&o(( Tip: Click me to remove your mine ))"
+
+confirm-inventory:
+  size: 27
+  title: "&a&lMine &b&lConfirm Deletion"
+  fillers:
+    slot: "all"
+    name: " "
+    material: stained_glass_pane
+    durability: 15
+  menuitems:
+    info:
+      confirm:
+        slot: 12
+        material: stained_glass_pane
+        durability: 5
+        name: "&a&lYes"
+      deny:
+        slot: 14
+        material: stained_glass_pane
+        durability: 14
+        name: "&c&lNo"
