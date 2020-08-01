@@ -30,7 +30,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.creepermc.mines.Core;
 import us.creepermc.mines.cmds.IslandMinesCmd;
-import us.creepermc.mines.listeners.BreakListener;
+import us.creepermc.mines.listeners.BlockListener;
 import us.creepermc.mines.listeners.InteractListener;
 import us.creepermc.mines.listeners.PlaceListener;
 import us.creepermc.mines.managers.*;
@@ -400,7 +400,7 @@ public class Util {
 							new UpgradeInvManager(c),
 							new WorthManager(c),
 							new IslandMinesCmd(c),
-							new BreakListener(c),
+							new BlockListener(c),
 							new InteractListener(c),
 							new PlaceListener(c)
 					));
