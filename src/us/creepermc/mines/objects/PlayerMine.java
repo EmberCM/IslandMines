@@ -82,7 +82,12 @@ public class PlayerMine {
 		for(int x = 1; x <= mine.getSize(); x++)
 			for(int z = 1; z <= mine.getSize(); z++)
 				for(int y = 1; y <= mine.getHeight(); y++) {
-					Block block = placed.clone().add(x, y, z).getBlock();
+					Block block;
+					try {
+						block = placed.clone().add(x, y, z).getBlock();
+					} catch(NullPointerException ex) {
+						continue;
+					}
 					if(block == null || block.getType() == upgrade.getData().getItemType()) continue;
 					block.setType(upgrade.getData().getItemType());
 					block.setData(upgrade.getData().getData());
