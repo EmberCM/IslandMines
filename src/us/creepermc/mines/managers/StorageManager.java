@@ -52,7 +52,9 @@ public class StorageManager extends XManager {
 			
 			@Override
 			public void run() {
-				List<PlayerMine> list = mines.stream().filter(mine -> index % mine.getMine().getAutomaticReset() == 0).collect(Collectors.toList());
+				List<PlayerMine> list = mines.stream()
+						.filter(mine -> index % mine.getMine().getAutomaticReset() == 0 && mine.getPlaced().getChunk().isLoaded())
+						.collect(Collectors.toList());
 				if(!list.isEmpty())
 					new BukkitRunnable() {
 						@Override
