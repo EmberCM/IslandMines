@@ -23,6 +23,7 @@ public class Core extends JavaPlugin {
 	final List<Files.XFile<?>> send = new ArrayList<>();
 	String allowed;
 	
+	boolean usingHD;
 	boolean usingPAPI;
 	boolean usingSSB;
 	Economy econ;
@@ -35,6 +36,7 @@ public class Core extends JavaPlugin {
 		
 		Util.registerHooks(this);
 		econ = Util.setupVault(Economy.class);
+		usingHD = getServer().getPluginManager().isPluginEnabled("HolographicDisplays");
 		usingPAPI = getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
 		usingSSB = getServer().getPluginManager().isPluginEnabled("SuperiorSkyblock2");
 	}
@@ -48,6 +50,7 @@ public class Core extends JavaPlugin {
 		send.stream().map(Files.XFile::getStorage).forEach(Map::clear);
 		send.clear();
 		allowed = null;
+		usingHD = false;
 		usingPAPI = false;
 		usingSSB = false;
 		econ = null;
@@ -89,6 +92,7 @@ public class Core extends JavaPlugin {
 		putMsg(defMsgs, defSnds, "NOT_ENOUGH_MONEY", "You don't have enough money for that upgrade", XSound.FIZZ);
 		putMsg(defMsgs, defSnds, "UPGRADED", "You have upgraded your mine to %s", XSound.ORB_PICKUP);
 		putMsg(defMsgs, defSnds, "NOT_YOUR_ISLAND", "You can only place a mine on your island", XSound.FIZZ);
+		putMsg(defMsgs, defSnds, "MINE_DIED", "Your %s Mine has ran out of time and been removed", XSound.FIZZ);
 		getSend(Files.Messages.class).load(defMsgs);
 		getSend(Files.Sounds.class).load(defSnds);
 	}

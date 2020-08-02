@@ -4,7 +4,7 @@ author: Ember
 version: Alpha-1.0.1
 description: Personal Mines for players
 website: https://ember.zone
-softdepend: [PlaceholderAPI, SuperiorSkyblock2]
+softdepend: [HolographicDisplays, PlaceholderAPI, SuperiorSkyblock2]
 commands:
   islandmines:
     description: Main Command - IslandMines

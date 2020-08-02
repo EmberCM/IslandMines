@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import us.creepermc.mines.Core;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -31,11 +32,26 @@ public class PlayerMine {
 	int progress;
 	Map<MaterialData, Integer> storage;
 	long timePlaced;
-	long lifeSpan;
 	@NonFinal
 	long lastReset;
 	
-	public void createSigns(Core core) {
+	public PlayerMine(UUID owner, Mine mine, Location placed) {
+		this.owner = owner;
+		this.mine = mine;
+		this.placed = placed;
+		this.upgrade = mine.getUpgrades().get(0);
+		this.progress = 0;
+		this.storage = new HashMap<>();
+		this.timePlaced = System.currentTimeMillis();
+		this.lastReset = 0;
+	}
+	
+	public void initialize(Core core) {
+		createSigns(core);
+		reset();
+	}
+	
+	private void createSigns(Core core) {
 		Block block1 = placed.clone().add(0, mine.getHeight() + 2, 1).getBlock();
 		block1.setType(Material.WALL_SIGN);
 		block1.setData((byte) 3);
@@ -92,7 +108,7 @@ public class PlayerMine {
 					block.setType(upgrade.getData().getItemType());
 					block.setData(upgrade.getData().getData());
 				}
-		Location teleport = placed.clone().add(mine.getSize() / 2.0 + 1, mine.getHeight() + 4, mine.getSize() / 2.0 + 1);
+		Location teleport = getCenterLocation();
 		Bukkit.getServer().getOnlinePlayers().stream().filter(player -> isInMine(player.getLocation())).forEach(player -> player.teleport(teleport));
 	}
 	
@@ -105,6 +121,10 @@ public class PlayerMine {
 			for(int z = 0; z <= mine.getSize() + 1; z++)
 				for(int y = 0; y <= mine.getHeight() + 2; y++)
 					placed.clone().add(x, y, z).getBlock().setType(Material.AIR, false);
+	}
+	
+	public Location getCenterLocation() {
+		return placed.clone().add(mine.getSize() / 2.0 + 1, mine.getHeight() + 4, mine.getSize() / 2.0 + 1);
 	}
 	
 	public boolean isInCooldown() {
@@ -127,5 +147,9 @@ public class PlayerMine {
 	public void upgrade(Upgrade upgrade) {
 		progress = 0;
 		this.upgrade = upgrade;
+	}
+	
+	public boolean isPastLifetime() {
+		return System.currentTimeMillis() >= timePlaced + mine.getLifeSpan();
 	}
 }

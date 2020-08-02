@@ -19,6 +19,7 @@ public class Mine {
 	int automaticReset;
 	int resetDelay;
 	List<String> signText;
+	List<String> hologramText;
 	ItemStack item;
 	List<Upgrade> upgrades;
 	

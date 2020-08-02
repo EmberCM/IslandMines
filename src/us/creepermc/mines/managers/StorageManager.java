@@ -27,7 +27,7 @@ public class StorageManager extends XManager {
 	final List<PlayerMine> mines = new ArrayList<>();
 	MinesManager minesManager;
 	WorthManager worthManager;
-	int resetTask;
+	MineTask mineTask;
 	int saveTask;
 	
 	public StorageManager(Core core) {
@@ -37,7 +37,7 @@ public class StorageManager extends XManager {
 	@Override
 	public void initialize() {
 		if(!mines.isEmpty()) saveJSON("mines.json");
-		if(resetTask != 0) getCore().getServer().getScheduler().cancelTask(resetTask);
+		if(mineTask != null) mineTask.cancel();
 		if(saveTask != 0) getCore().getServer().getScheduler().cancelTask(saveTask);
 		mines.clear();
 		
@@ -50,48 +50,37 @@ public class StorageManager extends XManager {
 				saveJSON("mines.json");
 			}
 		}.runTaskTimerAsynchronously(getCore(), 36000, 36000 /* 30 minutes */).getTaskId();
-		resetTask = new BukkitRunnable() {
-			int index = 0;
-			
-			@Override
-			public void run() {
-				List<PlayerMine> list = mines.stream()
-						.filter(mine -> index % mine.getMine().getAutomaticReset() == 0 && mine.getPlaced().getChunk().isLoaded())
-						.collect(Collectors.toList());
-				if(!list.isEmpty())
-					new BukkitRunnable() {
-						@Override
-						public void run() {
-							list.forEach(PlayerMine::reset);
-						}
-					}.runTask(getCore());
-				index++;
-			}
-		}.runTaskTimerAsynchronously(getCore(), 1200, 1200).getTaskId();
+		(mineTask = new MineTask()).runTaskTimer(getCore(), 20, 20);
 	}
 	
 	@Override
 	public void deinitialize() {
-		if(resetTask != 0) getCore().getServer().getScheduler().cancelTask(resetTask);
+		if(mineTask != null) mineTask.cancel();
 		if(saveTask != 0) getCore().getServer().getScheduler().cancelTask(saveTask);
 		saveJSON("mines.json");
 		minesManager = null;
 		worthManager = null;
+		if(getCore().isUsingHD()) mines.forEach(mine -> HolographicDisplaysHook.deleteHologram(getCore(), mine));
 		mines.clear();
-		resetTask = 0;
+		mineTask = null;
 		saveTask = 0;
 	}
 	
 	public void createMine(Mine mine, Player player, Location location) {
-		PlayerMine pmine = new PlayerMine(player.getUniqueId(), mine, location, mine.getUpgrades().get(0), 0, new HashMap<>(), System.currentTimeMillis(), mine.getLifeSpan(), 0L);
-		pmine.createSigns(getCore());
+		PlayerMine pmine = new PlayerMine(player.getUniqueId(), mine, location);
 		mines.add(pmine);
-		pmine.reset();
+		pmine.initialize(getCore());
 	}
 	
-	public void deleteMine(PlayerMine mine, Player player) {
+	public void deleteMine(PlayerMine mine, Player player, boolean giveBack) {
 		mine.clear();
+		if(getCore().isUsingHD()) HolographicDisplaysHook.deleteHologram(getCore(), mine);
 		mines.remove(mine);
+		if(player == null) return;
+		if(!giveBack) {
+			getCore().sendMsg(player, "MINE_DIED", mine.getMine().getPrettyId());
+			return;
+		}
 		getCore().sendMsg(player, "DELETED_MINE", mine.getMine().getPrettyId());
 		if(player.getInventory().firstEmpty() != -1) player.getInventory().addItem(mine.getMine().getItem());
 		else {
@@ -141,8 +130,7 @@ public class StorageManager extends XManager {
 					storage.put(new MaterialData(Material.valueOf(split[0]), (byte) Integer.parseInt(split[1])), v2.intValue());
 				});
 				long timePlaced = Long.parseLong(v.get("TIME_PLACED").toString());
-				long lifeSpan = Long.parseLong(v.get("LIFE_SPAN").toString());
-				mines.add(new PlayerMine(owner, mine, placed, upgrade, progress, storage, timePlaced, lifeSpan, 0));
+				mines.add(new PlayerMine(owner, mine, placed, upgrade, progress, storage, timePlaced, 0));
 			});
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -162,13 +150,43 @@ public class StorageManager extends XManager {
 			mine.getStorage().forEach((k, v) -> storage.put(k.getItemType() + ":" + k.getData(), v));
 			object.put("STORAGE", storage);
 			object.put("TIME_PLACED", mine.getTimePlaced());
-			object.put("LIFE_SPAN", mine.getLifeSpan());
 			all.put(UUID.randomUUID().toString(), object);
 		});
 		try {
 			java.nio.file.Files.write(Paths.get(getCore().getDataFolder().getPath() + "/" + file), all.toJSONString().getBytes());
 		} catch(Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	@FieldDefaults(level = AccessLevel.PRIVATE)
+	public class MineTask extends BukkitRunnable {
+		int index;
+		
+		@Override
+		public void run() {
+			List<PlayerMine> reset = mines.stream().filter(PlayerMine::isPastLifetime).collect(Collectors.toList());
+			if(!reset.isEmpty()) {
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						reset.forEach(mine -> deleteMine(mine, getCore().getServer().getPlayer(mine.getOwner()), false));
+					}
+				}.runTask(getCore());
+				mines.removeAll(reset);
+			}
+			if(getCore().isUsingHD()) mines.forEach(mine -> HolographicDisplaysHook.updateHologram(getCore(), mine, index));
+			List<PlayerMine> list = mines.stream()
+					.filter(mine -> index % mine.getMine().getAutomaticReset() == 0 && mine.getPlaced().getChunk().isLoaded())
+					.collect(Collectors.toList());
+			if(!list.isEmpty())
+				new BukkitRunnable() {
+					@Override
+					public void run() {
+						list.forEach(PlayerMine::reset);
+					}
+				}.runTask(getCore());
+			index++;
 		}
 	}
 }

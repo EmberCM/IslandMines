@@ -43,9 +43,10 @@ public class MinesManager extends XManager {
 				int size = config.getInt(path + "size");
 				int height = config.getInt(path + "height");
 				long lifeSpan = config.getLong(path + "lifespan") * 60000;
-				int automaticReset = (int) config.getDouble(path + "automatic-reset");
+				int automaticReset = (int) config.getDouble(path + "automatic-reset") * 60;
 				int resetDelay = (int) config.getDouble(path + "manual-reset-delay");
 				List<String> signText = Util.color(config.getStringList(path + "sign-text"));
+				List<String> hologramText = Util.color(config.getStringList(path + "hologram-text"));
 				ItemStack item = Util.getItem(config, path + "item");
 				List<Upgrade> upgrades = new ArrayList<>();
 				if(config.isConfigurationSection(path + "upgrades"))
@@ -58,7 +59,7 @@ public class MinesManager extends XManager {
 						MaterialData data = new MaterialData(Util.getMaterial(udata[0]), durability);
 						upgrades.add(new Upgrade(uid, price, blocks, data));
 					});
-				mines.add(new Mine(id, size, height, lifeSpan, automaticReset, resetDelay, signText, item, upgrades));
+				mines.add(new Mine(id, size, height, lifeSpan, automaticReset, resetDelay, signText, hologramText, item, upgrades));
 			});
 	}
 	
