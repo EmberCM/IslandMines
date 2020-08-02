@@ -51,7 +51,8 @@ public class InteractListener extends XListener {
 		event.setCancelled(true);
 		Player player = event.getPlayer();
 		if(type == Material.BEDROCK) {
-			if(getCore().isUsingSSB() ? !SuperiorSkyblockHook.isAllowed(player, location) : !player.getUniqueId().equals(mine.getOwner())) {
+			if(!player.hasPermission("islandmines.admin") &&
+					(getCore().isUsingSSB() ? !SuperiorSkyblockHook.isAllowed(player, location) : !player.getUniqueId().equals(mine.getOwner()))) {
 				getCore().sendMsg(player, "NOT_OWNER");
 				return;
 			}

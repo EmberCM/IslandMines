@@ -71,7 +71,7 @@ public class MainInvManager extends XInvManager {
 				storageInvManager.openInventory(player, mine);
 				break;
 			case "remove":
-				if(!player.getUniqueId().equals(mine.getOwner())) {
+				if(!player.hasPermission("islandmines.admin") && !player.getUniqueId().equals(mine.getOwner())) {
 					getCore().sendMsg(player, "NOT_OWNER");
 					break;
 				}
