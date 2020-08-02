@@ -140,8 +140,8 @@ public class PlayerMine {
 		progress++;
 	}
 	
-	public void addStorage(MaterialData data) {
-		storage.put(data, storage.getOrDefault(data, 0) + 1);
+	public void addStorage(MaterialData data, int amount) {
+		storage.put(data, storage.getOrDefault(data, 0) + amount);
 	}
 	
 	public void upgrade(Upgrade upgrade) {
