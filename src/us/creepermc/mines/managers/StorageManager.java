@@ -36,7 +36,10 @@ public class StorageManager extends XManager {
 	
 	@Override
 	public void initialize() {
-		if(!mines.isEmpty()) deinitialize();
+		if(!mines.isEmpty()) saveJSON("mines.json");
+		if(resetTask != 0) getCore().getServer().getScheduler().cancelTask(resetTask);
+		if(saveTask != 0) getCore().getServer().getScheduler().cancelTask(saveTask);
+		mines.clear();
 		
 		minesManager = getCore().getManager(MinesManager.class);
 		worthManager = getCore().getManager(WorthManager.class);
