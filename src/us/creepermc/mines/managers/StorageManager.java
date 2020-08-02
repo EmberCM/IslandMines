@@ -183,7 +183,7 @@ public class StorageManager extends XManager {
 				new BukkitRunnable() {
 					@Override
 					public void run() {
-						list.forEach(PlayerMine::reset);
+						list.forEach(mine -> mine.reset(getCore()));
 					}
 				}.runTask(getCore());
 			index++;

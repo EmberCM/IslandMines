@@ -18,6 +18,7 @@ public class Mine {
 	long lifeSpan;
 	int automaticReset;
 	int resetDelay;
+	int ticksPerRow;
 	List<String> signText;
 	List<String> hologramText;
 	ItemStack item;

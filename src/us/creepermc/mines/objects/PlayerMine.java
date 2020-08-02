@@ -48,7 +48,7 @@ public class PlayerMine {
 	
 	public void initialize(Core core) {
 		createSigns(core);
-		reset();
+		reset(core);
 	}
 	
 	private void createSigns(Core core) {
@@ -93,27 +93,35 @@ public class PlayerMine {
 				&& location.getBlockZ() >= placed.getBlockZ() && placed.getBlockZ() + mine.getSize() + 1 >= location.getBlockZ();
 	}
 	
-	public void reset(boolean setTime) {
+	public void reset(Core core, boolean setTime) {
 		if(setTime) lastReset = System.currentTimeMillis();
-		for(int x = 1; x <= mine.getSize(); x++)
-			for(int z = 1; z <= mine.getSize(); z++)
-				for(int y = 1; y <= mine.getHeight(); y++) {
-					Block block;
-					try {
-						block = placed.clone().add(x, y, z).getBlock();
-					} catch(NullPointerException ex) {
-						continue;
+		new BukkitRunnable() {
+			private int y = 1;
+			
+			@Override
+			public void run() {
+				for(int x = 1; x <= mine.getSize(); x++)
+					for(int z = 1; z <= mine.getSize(); z++) {
+						Block block;
+						try {
+							block = placed.clone().add(x, y, z).getBlock();
+						} catch(NullPointerException ex) {
+							continue;
+						}
+						if(block == null || block.getType() == upgrade.getData().getItemType()) continue;
+						block.setType(upgrade.getData().getItemType());
+						block.setData(upgrade.getData().getData());
 					}
-					if(block == null || block.getType() == upgrade.getData().getItemType()) continue;
-					block.setType(upgrade.getData().getItemType());
-					block.setData(upgrade.getData().getData());
-				}
+				y++;
+				if(y > mine.getHeight()) cancel();
+			}
+		}.runTaskTimer(core, 0, mine.getTicksPerRow());
 		Location teleport = getCenterLocation();
 		Bukkit.getServer().getOnlinePlayers().stream().filter(player -> isInMine(player.getLocation())).forEach(player -> player.teleport(teleport));
 	}
 	
-	public void reset() {
-		reset(false);
+	public void reset(Core core) {
+		reset(core, false);
 	}
 	
 	public void clear() {
