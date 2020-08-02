@@ -12,7 +12,8 @@ public class HolographicDisplaysHook {
 	private static Hologram createHologram(Core core, PlayerMine mine) {
 		Hologram hologram = HologramsAPI.createHologram(core, mine.getCenterLocation());
 		String cooldown = Util.timeFromMillis(mine.getCooldown(), "medium");
-		mine.getMine().getHologramText().forEach(line -> hologram.appendTextLine(line.replace("{time}", cooldown)));
+		String life = Util.timeFromMillis(mine.getLifeLeft(), "medium");
+		mine.getMine().getHologramText().forEach(line -> hologram.appendTextLine(line.replace("{time}", cooldown).replace("{life}", life)));
 		return hologram;
 	}
 	
@@ -21,8 +22,9 @@ public class HolographicDisplaysHook {
 		if(hologram == null) hologram = createHologram(core, mine);
 		int resetDelay = mine.getMine().getAutomaticReset();
 		String cooldown = Util.timeFromMillis((resetDelay - (index % resetDelay)) * 1000, "medium");
+		String life = Util.timeFromMillis(mine.getLifeLeft(), "medium");
 		for(int i = 0; i < mine.getMine().getHologramText().size(); i++)
-			((TextLine) hologram.getLine(i)).setText(mine.getMine().getHologramText().get(i).replace("{time}", cooldown));
+			((TextLine) hologram.getLine(i)).setText(mine.getMine().getHologramText().get(i).replace("{time}", cooldown).replace("{life}", life));
 	}
 	
 	public static void deleteHologram(Core core, PlayerMine mine) {

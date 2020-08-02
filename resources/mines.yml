@@ -18,6 +18,8 @@ mines:
     hologram-text:
       - "&aThis &b&lMine &awill reset in"
       - "&e{time}"
+      - "&aThis &b&lMine &awill last"
+      - "&e{life}"
     item:
       material: beacon
       glow: true

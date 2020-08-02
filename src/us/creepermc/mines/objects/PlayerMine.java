@@ -160,4 +160,8 @@ public class PlayerMine {
 	public boolean isPastLifetime() {
 		return System.currentTimeMillis() >= timePlaced + mine.getLifeSpan();
 	}
+	
+	public long getLifeLeft() {
+		return timePlaced + mine.getLifeSpan() - System.currentTimeMillis();
+	}
 }
