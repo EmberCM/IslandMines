@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.ItemStack;
 import us.creepermc.mines.Core;
 import us.creepermc.mines.managers.StorageManager;
+import us.creepermc.mines.managers.SuperiorSkyblockHook;
 import us.creepermc.mines.objects.PlayerMine;
 import us.creepermc.mines.templates.XListener;
 
@@ -45,6 +46,10 @@ public class BlockListener extends XListener {
 		PlayerMine mine = storageManager.getMine(event.getBlock().getLocation());
 		if(mine == null) return;
 		Player player = event.getPlayer();
+		if(getCore().isUsingSSB() && !SuperiorSkyblockHook.isAllowed(player, event.getBlock().getLocation())) {
+			event.setCancelled(true);
+			return;
+		}
 		event.setCancelled(!player.hasPermission("islandmines.admin"));
 		Block block = event.getBlock();
 		boolean redstoneMatch = block.getType() == Material.GLOWING_REDSTONE_ORE && mine.getUpgrade().getData().getItemType() == Material.REDSTONE_ORE;
