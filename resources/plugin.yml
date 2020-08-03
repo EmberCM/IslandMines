@@ -1,7 +1,7 @@
 name: IslandMines
 main: us.creepermc.mines.Core
 author: Ember
-version: Alpha-1.0.3
+version: Alpha-1.0.4
 description: Personal Mines for players
 website: https://ember.zone
 softdepend: [HolographicDisplays, PlaceholderAPI, SuperiorSkyblock2]
