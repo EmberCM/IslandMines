@@ -46,6 +46,10 @@ public class ConfirmRemoveGUI extends XInvManager {
 		player.removeMetadata("islandmines_mine", getCore());
 		switch(menuItem.getId()) {
 			case "confirm":
+				if(!mine.canRemove()) {
+					getCore().sendMsg(player, "MINE_SAFETY");
+					break;
+				}
 				storageManager.deleteMine(mine, player, true);
 				break;
 			case "deny":

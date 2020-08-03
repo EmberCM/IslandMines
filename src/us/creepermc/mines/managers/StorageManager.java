@@ -130,7 +130,8 @@ public class StorageManager extends XManager {
 					storage.put(new MaterialData(Material.valueOf(split[0]), (byte) Integer.parseInt(split[1])), v2.intValue());
 				});
 				long timePlaced = Long.parseLong(v.get("TIME_PLACED").toString());
-				mines.add(new PlayerMine(owner, mine, placed, upgrade, progress, storage, timePlaced, 0));
+				boolean removed = Boolean.parseBoolean(v.containsKey("REMOVED") ? v.get("REMOVED").toString() : "false");
+				mines.add(new PlayerMine(owner, mine, placed, upgrade, progress, storage, timePlaced, 0, removed));
 			});
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -150,6 +151,7 @@ public class StorageManager extends XManager {
 			mine.getStorage().forEach((k, v) -> storage.put(k.getItemType() + ":" + k.getData(), v));
 			object.put("STORAGE", storage);
 			object.put("TIME_PLACED", mine.getTimePlaced());
+			object.put("REMOVED", mine.isRemoved());
 			all.put(UUID.randomUUID().toString(), object);
 		});
 		try {
@@ -165,7 +167,9 @@ public class StorageManager extends XManager {
 		
 		@Override
 		public void run() {
-			List<PlayerMine> reset = mines.stream().filter(PlayerMine::isPastLifetime).collect(Collectors.toList());
+			List<PlayerMine> reset = mines.stream().filter(mine ->
+					mine.isPastLifetime() || (mine.getPlaced().getChunk().isLoaded() && mine.getPlaced().getBlock().getType() != Material.BEDROCK)
+			).collect(Collectors.toList());
 			if(!reset.isEmpty()) {
 				new BukkitRunnable() {
 					@Override

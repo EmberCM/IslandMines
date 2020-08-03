@@ -16,6 +16,7 @@ public class Mine {
 	int size;
 	int height;
 	long lifeSpan;
+	long removeSafety;
 	int automaticReset;
 	int resetDelay;
 	int ticksPerRow;

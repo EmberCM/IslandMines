@@ -43,6 +43,7 @@ public class MinesManager extends XManager {
 				int size = config.getInt(path + "size");
 				int height = config.getInt(path + "height");
 				long lifeSpan = config.getLong(path + "lifespan") * 60000;
+				long removeSafety = config.getLong(path + "remove-safety") * 60000;
 				int automaticReset = (int) config.getDouble(path + "automatic-reset") * 60;
 				int resetDelay = (int) config.getDouble(path + "manual-reset-delay");
 				int ticks = config.getInt(path + "ticks-per-row");
@@ -60,7 +61,7 @@ public class MinesManager extends XManager {
 						MaterialData data = new MaterialData(Util.getMaterial(udata[0]), durability);
 						upgrades.add(new Upgrade(uid, price, blocks, data));
 					});
-				mines.add(new Mine(id, size, height, lifeSpan, automaticReset, resetDelay, ticks, signText, hologramText, item, upgrades));
+				mines.add(new Mine(id, size, height, lifeSpan, removeSafety, automaticReset, resetDelay, ticks, signText, hologramText, item, upgrades));
 			});
 	}
 	

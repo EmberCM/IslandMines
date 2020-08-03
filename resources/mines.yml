@@ -9,6 +9,7 @@ mines:
     size: 10
     height: 20
     lifespan: 5 # In minutes
+    remove-safety: 4 # In minutes
     automatic-reset: 1 # In minutes
     manual-reset-delay: 1 # In minutes
     ticks-per-row: 5 # There are 20 ticks per second

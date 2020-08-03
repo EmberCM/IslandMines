@@ -34,6 +34,8 @@ public class PlayerMine {
 	long timePlaced;
 	@NonFinal
 	long lastReset;
+	@NonFinal
+	boolean removed;
 	
 	public PlayerMine(UUID owner, Mine mine, Location placed) {
 		this.owner = owner;
@@ -94,12 +96,17 @@ public class PlayerMine {
 	}
 	
 	public void reset(Core core, boolean setTime) {
+		if(removed) return;
 		if(setTime) lastReset = System.currentTimeMillis();
 		new BukkitRunnable() {
 			private int y = 1;
 			
 			@Override
 			public void run() {
+				if(removed) {
+					cancel();
+					return;
+				}
 				for(int x = 1; x <= mine.getSize(); x++)
 					for(int z = 1; z <= mine.getSize(); z++) {
 						Block block;
@@ -129,6 +136,7 @@ public class PlayerMine {
 			for(int z = 0; z <= mine.getSize() + 1; z++)
 				for(int y = 0; y <= mine.getHeight() + 2; y++)
 					placed.clone().add(x, y, z).getBlock().setType(Material.AIR, false);
+		removed = true;
 	}
 	
 	public Location getCenterLocation() {
@@ -158,10 +166,14 @@ public class PlayerMine {
 	}
 	
 	public boolean isPastLifetime() {
-		return System.currentTimeMillis() >= timePlaced + mine.getLifeSpan();
+		return removed || System.currentTimeMillis() >= timePlaced + mine.getLifeSpan();
 	}
 	
 	public long getLifeLeft() {
 		return timePlaced + mine.getLifeSpan() - System.currentTimeMillis();
+	}
+	
+	public boolean canRemove() {
+		return !isPastLifetime() && timePlaced + mine.getRemoveSafety() > System.currentTimeMillis();
 	}
 }

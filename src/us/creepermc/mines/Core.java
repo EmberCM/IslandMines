@@ -93,6 +93,7 @@ public class Core extends JavaPlugin {
 		putMsg(defMsgs, defSnds, "UPGRADED", "You have upgraded your mine to %s", XSound.ORB_PICKUP);
 		putMsg(defMsgs, defSnds, "NOT_YOUR_ISLAND", "You can only place a mine on your island", XSound.FIZZ);
 		putMsg(defMsgs, defSnds, "MINE_DIED", "Your %s Mine has ran out of time and been removed", XSound.FIZZ);
+		putMsg(defMsgs, defSnds, "MINE_SAFETY", "This mine has past the amount of time where it can be removed", XSound.FIZZ);
 		getSend(Files.Messages.class).load(defMsgs);
 		getSend(Files.Sounds.class).load(defSnds);
 	}
