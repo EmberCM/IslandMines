@@ -4,8 +4,9 @@ author: Ember
 version: Alpha-1.0.4
 description: Personal Mines for players
 website: https://ember.zone
-softdepend: [HolographicDisplays, PlaceholderAPI, SuperiorSkyblock2]
+loadbefore: [ PickaxeUpgrades ]
+softdepend: [ HolographicDisplays, PlaceholderAPI, SuperiorSkyblock2 ]
 commands:
   islandmines:
     description: Main Command - IslandMines
-    aliases: [xislandmines, islandmine, imines, imine, mines, mine]
+    aliases: [ xislandmines, islandmine, imines, imine, mines, mine ]
