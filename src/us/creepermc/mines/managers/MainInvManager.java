@@ -64,7 +64,7 @@ public class MainInvManager extends XInvManager {
 					getCore().sendMsg(player, "RESET_COOLDOWN", Util.timeFromMillis(mine.getCooldown(), "medium"));
 					break;
 				}
-				mine.reset(getCore(), true);
+				mine.reset(true);
 				getCore().sendMsg(player, "RESET");
 				break;
 			case "storage":

@@ -63,7 +63,7 @@ public class InteractListener extends XListener {
 			getCore().sendMsg(player, "RESET_COOLDOWN", Util.timeFromMillis(mine.getCooldown(), "medium"));
 			return;
 		}
-		mine.reset(getCore(), true);
+		mine.reset(true);
 		getCore().sendMsg(player, "RESET");
 	}
 }

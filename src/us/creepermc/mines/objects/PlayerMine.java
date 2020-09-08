@@ -13,6 +13,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.creepermc.mines.Core;
+import us.creepermc.mines.utils.BlockUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class PlayerMine {
 	
 	public void initialize(Core core) {
 		createSigns(core);
-		reset(core);
+		reset();
 	}
 	
 	private void createSigns(Core core) {
@@ -95,40 +96,27 @@ public class PlayerMine {
 				&& location.getBlockZ() >= placed.getBlockZ() && placed.getBlockZ() + mine.getSize() + 1 >= location.getBlockZ();
 	}
 	
-	public void reset(Core core, boolean setTime) {
+	public void reset(boolean setTime) {
 		if(removed) return;
 		if(setTime) lastReset = System.currentTimeMillis();
-		new BukkitRunnable() {
-			private int y = 1;
-			
-			@Override
-			public void run() {
-				if(removed) {
-					cancel();
-					return;
-				}
-				for(int x = 1; x <= mine.getSize(); x++)
-					for(int z = 1; z <= mine.getSize(); z++) {
-						Block block;
-						try {
-							block = placed.clone().add(x, y, z).getBlock();
-						} catch(NullPointerException ex) {
-							continue;
-						}
-						if(block == null || block.getType() == upgrade.getData().getItemType()) continue;
-						block.setType(upgrade.getData().getItemType());
-						block.setData(upgrade.getData().getData());
+		for(int y = 1; y <= mine.getHeight(); y++)
+			for(int x = 1; x <= mine.getSize(); x++)
+				for(int z = 1; z <= mine.getSize(); z++) {
+					Block block;
+					try {
+						block = placed.clone().add(x, y, z).getBlock();
+					} catch(NullPointerException ex) {
+						continue;
 					}
-				y++;
-				if(y > mine.getHeight()) cancel();
-			}
-		}.runTaskTimer(core, 0, mine.getTicksPerRow());
+					if(block == null || block.getType() == upgrade.getData().getItemType()) continue;
+					BlockUtil.setBlockInNativeChunkSection(block.getWorld(), block.getX(), block.getY(), block.getZ(), upgrade.getData().getItemTypeId(), upgrade.getData().getData());
+				}
 		Location teleport = getCenterLocation();
 		Bukkit.getServer().getOnlinePlayers().stream().filter(player -> isInMine(player.getLocation())).forEach(player -> player.teleport(teleport));
 	}
 	
-	public void reset(Core core) {
-		reset(core, false);
+	public void reset() {
+		reset(false);
 	}
 	
 	public void clear() {
