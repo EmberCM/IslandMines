@@ -17,11 +17,13 @@ public class HolographicDisplaysHook {
 		return hologram;
 	}
 	
-	public static void updateHologram(Core core, PlayerMine mine, int index) {
+	public static void updateHologram(Core core, PlayerMine mine) {
 		Hologram hologram = getHologram(core, mine);
 		if(hologram == null) hologram = createHologram(core, mine);
 		int resetDelay = mine.getMine().getAutomaticReset();
-		String cooldown = Util.timeFromMillis((resetDelay - (index % resetDelay)) * 1000, "medium");
+		long difference = System.currentTimeMillis() - mine.getTimePlaced();
+		while(difference >= resetDelay) difference -= resetDelay;
+		String cooldown = Util.timeFromMillis(resetDelay - difference, "medium");
 		String life = Util.timeFromMillis(mine.getLifeLeft(), "medium");
 		for(int i = 0; i < mine.getMine().getHologramText().size(); i++)
 			((TextLine) hologram.getLine(i)).setText(mine.getMine().getHologramText().get(i).replace("{time}", cooldown).replace("{life}", life));

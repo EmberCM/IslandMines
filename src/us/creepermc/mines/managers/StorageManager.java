@@ -163,8 +163,6 @@ public class StorageManager extends XManager {
 	
 	@FieldDefaults(level = AccessLevel.PRIVATE)
 	public class MineTask extends BukkitRunnable {
-		int index;
-		
 		@Override
 		public void run() {
 			List<PlayerMine> reset = mines.stream().filter(mine ->
@@ -179,10 +177,13 @@ public class StorageManager extends XManager {
 				}.runTask(getCore());
 				mines.removeAll(reset);
 			}
-			if(getCore().isUsingHD()) mines.forEach(mine -> HolographicDisplaysHook.updateHologram(getCore(), mine, index));
+			if(getCore().isUsingHD()) mines.forEach(mine -> HolographicDisplaysHook.updateHologram(getCore(), mine));
 			List<PlayerMine> list = mines.stream()
-					.filter(mine -> index % mine.getMine().getAutomaticReset() == 0 && mine.getPlaced().getChunk().isLoaded())
-					.collect(Collectors.toList());
+					.filter(mine -> {
+						long difference = System.currentTimeMillis() - mine.getTimePlaced();
+						while(difference >= mine.getMine().getAutomaticReset()) difference -= mine.getMine().getAutomaticReset();
+						return difference <= 1000 && mine.getPlaced().getChunk().isLoaded();
+					}).collect(Collectors.toList());
 			if(!list.isEmpty())
 				new BukkitRunnable() {
 					@Override
@@ -190,7 +191,6 @@ public class StorageManager extends XManager {
 						list.forEach(PlayerMine::reset);
 					}
 				}.runTask(getCore());
-			index++;
 		}
 	}
 }
