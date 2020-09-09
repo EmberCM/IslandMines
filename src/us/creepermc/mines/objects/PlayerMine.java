@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Getter
 @AllArgsConstructor
@@ -94,18 +95,20 @@ public class PlayerMine {
 	public void reset(boolean setTime) {
 		if(removed) return;
 		if(setTime) lastReset = System.currentTimeMillis();
-		for(int y = 1; y <= mine.getHeight(); y++)
-			for(int x = 1; x <= mine.getSize(); x++)
-				for(int z = 1; z <= mine.getSize(); z++) {
-					Block block;
-					try {
-						block = placed.clone().add(x, y, z).getBlock();
-					} catch(NullPointerException ex) {
-						continue;
+		CompletableFuture.runAsync(() -> {
+			for(int y = 1; y <= mine.getHeight(); y++)
+				for(int x = 1; x <= mine.getSize(); x++)
+					for(int z = 1; z <= mine.getSize(); z++) {
+						Block block;
+						try {
+							block = placed.clone().add(x, y, z).getBlock();
+						} catch(NullPointerException ex) {
+							continue;
+						}
+						if(block == null || block.getType() == upgrade.getData().getItemType()) continue;
+						BlockUtil.setBlockInNativeChunkSection(block.getWorld(), block.getX(), block.getY(), block.getZ(), upgrade.getData().getItemTypeId(), upgrade.getData().getData());
 					}
-					if(block == null || block.getType() == upgrade.getData().getItemType()) continue;
-					BlockUtil.setBlockInNativeChunkSection(block.getWorld(), block.getX(), block.getY(), block.getZ(), upgrade.getData().getItemTypeId(), upgrade.getData().getData());
-				}
+		});
 		Location teleport = getCenterLocation();
 		Bukkit.getServer().getOnlinePlayers().stream().filter(player -> isInMine(player.getLocation())).forEach(player -> player.teleport(teleport));
 	}
@@ -115,12 +118,14 @@ public class PlayerMine {
 	}
 	
 	public void clear() {
-		for(int x = 0; x <= mine.getSize() + 1; x++)
-			for(int z = 0; z <= mine.getSize() + 1; z++)
-				for(int y = 0; y <= mine.getHeight() + 2; y++) {
-					Location loc = placed.clone().add(x, y, z);
-					BlockUtil.setBlockInNativeChunkSection(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 0, (byte) 0);
-				}
+		CompletableFuture.runAsync(() -> {
+			for(int x = 0; x <= mine.getSize() + 1; x++)
+				for(int z = 0; z <= mine.getSize() + 1; z++)
+					for(int y = 0; y <= mine.getHeight() + 2; y++) {
+						Location loc = placed.clone().add(x, y, z);
+						BlockUtil.setBlockInNativeChunkSection(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 0, (byte) 0);
+					}
+		});
 		removed = true;
 	}
 	
