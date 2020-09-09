@@ -55,28 +55,23 @@ public class PlayerMine {
 	}
 	
 	private void createSigns(Core core) {
+		int wallId = Material.WALL_SIGN.getId();
 		Block block1 = placed.clone().add(0, mine.getHeight() + 2, 1).getBlock();
-		block1.setType(Material.WALL_SIGN);
-		block1.setData((byte) 3);
+		BlockUtil.setBlockInNativeChunkSection(block1.getWorld(), block1.getX(), block1.getY(), block1.getZ(), wallId, (byte) 3);
 		Block block2 = placed.clone().add(1, mine.getHeight() + 2, 0).getBlock();
-		block2.setType(Material.WALL_SIGN);
-		block2.setData((byte) 5);
+		BlockUtil.setBlockInNativeChunkSection(block2.getWorld(), block2.getX(), block2.getY(), block2.getZ(), wallId, (byte) 5);
 		Block block3 = placed.clone().add(mine.getSize(), mine.getHeight() + 2, 0).getBlock();
-		block3.setType(Material.WALL_SIGN);
-		block3.setData((byte) 4);
+		BlockUtil.setBlockInNativeChunkSection(block3.getWorld(), block3.getX(), block3.getY(), block3.getZ(), wallId, (byte) 4);
 		Block block4 = placed.clone().add(mine.getSize() + 1, mine.getHeight() + 2, 1).getBlock();
-		block4.setType(Material.WALL_SIGN);
-		block4.setData((byte) 3);
+		BlockUtil.setBlockInNativeChunkSection(block4.getWorld(), block4.getX(), block4.getY(), block4.getZ(), wallId, (byte) 3);
 		Block block5 = placed.clone().add(mine.getSize() + 1, mine.getHeight() + 2, mine.getSize()).getBlock();
-		block5.setType(Material.WALL_SIGN);
+		BlockUtil.setBlockInNativeChunkSection(block5.getWorld(), block5.getX(), block5.getY(), block5.getZ(), wallId, (byte) 0);
 		Block block6 = placed.clone().add(mine.getSize(), mine.getHeight() + 2, mine.getSize() + 1).getBlock();
-		block6.setType(Material.WALL_SIGN);
-		block6.setData((byte) 4);
+		BlockUtil.setBlockInNativeChunkSection(block6.getWorld(), block6.getX(), block6.getY(), block6.getZ(), wallId, (byte) 4);
 		Block block7 = placed.clone().add(1, mine.getHeight() + 2, mine.getSize() + 1).getBlock();
-		block7.setType(Material.WALL_SIGN);
-		block7.setData((byte) 5);
+		BlockUtil.setBlockInNativeChunkSection(block7.getWorld(), block7.getX(), block7.getY(), block7.getZ(), wallId, (byte) 5);
 		Block block8 = placed.clone().add(0, mine.getHeight() + 2, mine.getSize()).getBlock();
-		block8.setType(Material.WALL_SIGN);
+		BlockUtil.setBlockInNativeChunkSection(block8.getWorld(), block8.getX(), block8.getY(), block8.getZ(), wallId, (byte) 0);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -122,8 +117,10 @@ public class PlayerMine {
 	public void clear() {
 		for(int x = 0; x <= mine.getSize() + 1; x++)
 			for(int z = 0; z <= mine.getSize() + 1; z++)
-				for(int y = 0; y <= mine.getHeight() + 2; y++)
-					placed.clone().add(x, y, z).getBlock().setType(Material.AIR, false);
+				for(int y = 0; y <= mine.getHeight() + 2; y++) {
+					Location loc = placed.clone().add(x, y, z);
+					BlockUtil.setBlockInNativeChunkSection(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 0, (byte) 0);
+				}
 		removed = true;
 	}
 	

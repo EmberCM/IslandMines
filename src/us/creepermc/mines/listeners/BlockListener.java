@@ -16,6 +16,7 @@ import us.creepermc.mines.managers.StorageManager;
 import us.creepermc.mines.managers.SuperiorSkyblockHook;
 import us.creepermc.mines.objects.PlayerMine;
 import us.creepermc.mines.templates.XListener;
+import us.creepermc.mines.utils.BlockUtil;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -57,7 +58,7 @@ public class BlockListener extends XListener {
 		mine.addProgress();
 		int amount = hasFortune(player.getItemInHand()) ? ThreadLocalRandom.current().nextInt(getFortune(player.getItemInHand()) + 1) + 1 : 1;
 		mine.addStorage(redstoneMatch ? mine.getUpgrade().getData() : block.getState().getData(), amount);
-		block.setType(Material.AIR);
+		BlockUtil.setBlockInNativeChunkSection(block.getWorld(), block.getX(), block.getY(), block.getZ(), 0, (byte) 0);
 	}
 	
 	@EventHandler

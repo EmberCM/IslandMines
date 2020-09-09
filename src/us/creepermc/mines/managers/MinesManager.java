@@ -15,6 +15,7 @@ import us.creepermc.mines.objects.Mine;
 import us.creepermc.mines.objects.TempMine;
 import us.creepermc.mines.objects.Upgrade;
 import us.creepermc.mines.templates.XManager;
+import us.creepermc.mines.utils.BlockUtil;
 import us.creepermc.mines.utils.Files;
 import us.creepermc.mines.utils.Util;
 
@@ -127,7 +128,7 @@ public class MinesManager extends XManager {
 			@Override
 			public void run() {
 				TempMine tempMine = tempMines.remove(player.getUniqueId());
-				tempMine.getLocations().forEach(loc -> loc.getBlock().setType(Material.BEDROCK));
+				tempMine.getLocations().forEach(loc -> BlockUtil.setBlockInNativeChunkSection(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), Material.BEDROCK.getId(), (byte) 0));
 				storageManager.createMine(tempMine.getMine(), player, tempMine.getLocation());
 				getCore().sendMsg(player, "CONFIRMED", tempMine.getMine().getPrettyId());
 			}
