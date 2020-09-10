@@ -168,7 +168,6 @@ public class StorageManager extends XManager {
 		}
 	}
 	
-	@FieldDefaults(level = AccessLevel.PRIVATE)
 	public class MineTask extends BukkitRunnable {
 		@Override
 		public void run() {
