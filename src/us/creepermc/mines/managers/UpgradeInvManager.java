@@ -124,7 +124,7 @@ public class UpgradeInvManager extends XListener {
 		player.closeInventory();
 		getCore().getEcon().withdrawPlayer(player, upgrade.getPrice());
 		mine.upgrade(upgrade);
-		mine.reset();
+		mine.reset(minesManager.getBlocksPerTick());
 		getCore().sendMsg(player, "UPGRADED", upgrade.getPrettyId());
 	}
 }

@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import us.creepermc.mines.Core;
+import us.creepermc.mines.objects.BlockUpdate;
 import us.creepermc.mines.objects.Mine;
 import us.creepermc.mines.objects.TempMine;
 import us.creepermc.mines.objects.Upgrade;
@@ -20,6 +21,7 @@ import us.creepermc.mines.utils.Util;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -27,6 +29,7 @@ public class MinesManager extends XManager {
 	final Map<UUID, TempMine> tempMines = new HashMap<>();
 	final List<Mine> mines = new ArrayList<>();
 	StorageManager storageManager;
+	int blocksPerTick;
 	
 	public MinesManager(Core core) {
 		super(core);
@@ -63,6 +66,7 @@ public class MinesManager extends XManager {
 					});
 				mines.add(new Mine(id, size, height, lifeSpan, removeSafety, automaticReset, resetDelay, signText, hologramText, item, upgrades));
 			});
+		blocksPerTick = config.getInt("blocks-per-tick", 5000);
 	}
 	
 	@Override
@@ -119,7 +123,12 @@ public class MinesManager extends XManager {
 			locations.add(location.clone().add(0, mine.getHeight() + 2, bigSize));
 			locations.add(location.clone().add(bigSize, mine.getHeight() + 2, 0));
 			locations.add(location.clone().add(bigSize, mine.getHeight() + 2, bigSize));
-			locations.forEach(loc -> BlockUtil.setBlockInNativeChunkSection(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), Material.BEDROCK.getId(), (byte) 0));
+			Queue<BlockUpdate> queue = locations.stream().map(loc -> new BlockUpdate(loc, Material.BEDROCK.getId(), (byte) 0)).collect(Collectors.toCollection(LinkedList::new));
+			BlockUtil.queueBlockUpdates(queue, Math.max(1, blocksPerTick));
+			try {
+				Thread.sleep(locations.size() / blocksPerTick * 50);
+			} catch(InterruptedException ignored) {
+			}
 			tempMines.put(player.getUniqueId(), new TempMine(mine, location, locations));
 			getCore().sendMsg(player, "PLACED_MINE", mine.getPrettyId());
 		});

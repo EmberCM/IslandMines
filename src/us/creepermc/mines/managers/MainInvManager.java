@@ -13,6 +13,7 @@ import us.creepermc.mines.utils.Util;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MainInvManager extends XInvManager {
 	ConfirmRemoveGUI confirmRemoveGUI;
+	MinesManager minesManager;
 	StorageInvManager storageInvManager;
 	StorageManager storageManager;
 	UpgradeInvManager upgradeInvManager;
@@ -27,6 +28,7 @@ public class MainInvManager extends XInvManager {
 		super.initialize();
 		
 		confirmRemoveGUI = getCore().getManager(ConfirmRemoveGUI.class);
+		minesManager = getCore().getManager(MinesManager.class);
 		storageInvManager = getCore().getManager(StorageInvManager.class);
 		storageManager = getCore().getManager(StorageManager.class);
 		upgradeInvManager = getCore().getManager(UpgradeInvManager.class);
@@ -38,6 +40,7 @@ public class MainInvManager extends XInvManager {
 		super.deinitialize();
 		
 		confirmRemoveGUI = null;
+		minesManager = null;
 		storageInvManager = null;
 		storageManager = null;
 		upgradeInvManager = null;
@@ -64,7 +67,7 @@ public class MainInvManager extends XInvManager {
 					getCore().sendMsg(player, "RESET_COOLDOWN", Util.timeFromMillis(mine.getCooldown(), "medium"));
 					break;
 				}
-				mine.reset(true);
+				mine.reset(minesManager.getBlocksPerTick(), true);
 				getCore().sendMsg(player, "RESET");
 				break;
 			case "storage":

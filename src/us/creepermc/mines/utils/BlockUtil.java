@@ -3,6 +3,10 @@ package us.creepermc.mines.utils;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import us.creepermc.mines.objects.BlockUpdate;
+
+import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
 
 public class BlockUtil {
 	public static void setBlockInNativeChunkSection(World world, int x, int y, int z, int blockId, byte data) {
@@ -17,6 +21,11 @@ public class BlockUtil {
 		notify(world, x, y, z);
 	}
 	
+	public static void setBlockInNativeChunkSection(BlockUpdate block) {
+		if(block == null) return;
+		setBlockInNativeChunkSection(block.getWorld(), block.getX(), block.getY(), block.getZ(), block.getId(), block.getData());
+	}
+	
 	private static void notify(World world, int x, int y, int z) {
 		try {
 			WorldServer worldServer = ((CraftWorld) world).getHandle();
@@ -25,5 +34,21 @@ public class BlockUtil {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+	
+	public static void queueBlockUpdates(Queue<BlockUpdate> blocks, int amountPerTick) {
+		CompletableFuture.runAsync(() -> {
+			int index = 0;
+			while(!blocks.isEmpty()) {
+				setBlockInNativeChunkSection(blocks.poll());
+				if(++index == amountPerTick) index = 0;
+				else continue;
+				try {
+					Thread.sleep(50);
+				} catch(Exception exception) {
+					exception.printStackTrace();
+				}
+			}
+		});
 	}
 }

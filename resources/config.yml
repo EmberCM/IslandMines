@@ -4,6 +4,8 @@
 #                                         #
 ###########################################
 
+blocks-per-tick: 5000
+
 main-inventory:
   size: 27
   title: "&a&lYour Personal &2&lMine"

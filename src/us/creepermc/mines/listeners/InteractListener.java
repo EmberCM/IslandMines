@@ -10,6 +10,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import us.creepermc.mines.Core;
 import us.creepermc.mines.managers.MainInvManager;
+import us.creepermc.mines.managers.MinesManager;
 import us.creepermc.mines.managers.StorageManager;
 import us.creepermc.mines.managers.SuperiorSkyblockHook;
 import us.creepermc.mines.objects.PlayerMine;
@@ -19,6 +20,7 @@ import us.creepermc.mines.utils.Util;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InteractListener extends XListener {
 	MainInvManager mainInvManager;
+	MinesManager minesManager;
 	StorageManager storageManager;
 	
 	public InteractListener(Core core) {
@@ -30,12 +32,14 @@ public class InteractListener extends XListener {
 		deinitialize();
 		
 		mainInvManager = getCore().getManager(MainInvManager.class);
+		minesManager = getCore().getManager(MinesManager.class);
 		storageManager = getCore().getManager(StorageManager.class);
 	}
 	
 	@Override
 	public void deinitialize() {
 		mainInvManager = null;
+		minesManager = null;
 		storageManager = null;
 	}
 	
@@ -63,7 +67,7 @@ public class InteractListener extends XListener {
 			getCore().sendMsg(player, "RESET_COOLDOWN", Util.timeFromMillis(mine.getCooldown(), "medium"));
 			return;
 		}
-		mine.reset(true);
+		mine.reset(minesManager.getBlocksPerTick(), true);
 		getCore().sendMsg(player, "RESET");
 	}
 }
