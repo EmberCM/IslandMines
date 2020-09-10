@@ -99,9 +99,7 @@ public class StorageInvManager extends XListener {
 		player.closeInventory();
 		PlayerMine mine = storageManager.getMine(player);
 		if(mine == null) return;
-		double worth = storageManager.getWorth(mine, player);
-		getCore().getEcon().depositPlayer(player, worth);
-		mine.getStorage().clear();
+		double worth = storageManager.sellStorage(mine, player);
 		getCore().sendMsg(player, "SOLD", NumberFormat.getNumberInstance().format(worth));
 	}
 }

@@ -115,6 +115,13 @@ public class StorageManager extends XManager {
 		return total;
 	}
 	
+	public double sellStorage(PlayerMine mine, Player player) {
+		double worth = getWorth(mine, player);
+		getCore().getEcon().depositPlayer(player, worth);
+		mine.getStorage().clear();
+		return worth;
+	}
+	
 	private void loadJSON(String file) {
 		try {
 			JSONObject json = (JSONObject) new JSONParser().parse(new FileReader(Files.getFile(getCore(), file, true)));
