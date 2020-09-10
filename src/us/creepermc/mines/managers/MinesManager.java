@@ -28,6 +28,8 @@ public class MinesManager extends XManager {
 	final Map<UUID, TempMine> tempMines = new HashMap<>();
 	final List<Mine> mines = new ArrayList<>();
 	StorageManager storageManager;
+	int interval;
+	double percent;
 	
 	public MinesManager(Core core) {
 		super(core);
@@ -64,6 +66,8 @@ public class MinesManager extends XManager {
 					});
 				mines.add(new Mine(id, size, height, lifeSpan, removeSafety, automaticReset, resetDelay, signText, hologramText, item, upgrades));
 			});
+		interval = getCore().getConfig().getInt("mine-preview.interval", 10);
+		percent = getCore().getConfig().getDouble("mine-preview.percent", 25) / 100;
 	}
 	
 	@Override
@@ -102,39 +106,41 @@ public class MinesManager extends XManager {
 	}
 	
 	public void testPlace(Player player, Location location, Mine mine) {
-		List<Location> locations = new ArrayList<>();
-		int bigSize = mine.getSize() + 1;
-		for(int x = 0; x <= bigSize; x++)
-			for(int z = 0; z <= bigSize; z++)
-				locations.add(location.clone().add(x, 0, z));
-		for(int z = 0; z <= bigSize; z += bigSize)
+		CompletableFuture.runAsync(() -> {
+			List<Location> locations = new ArrayList<>();
+			int bigSize = mine.getSize() + 1;
 			for(int x = 0; x <= bigSize; x++)
-				for(int y = 1; y <= mine.getHeight() + 1; y++)
-					locations.add(location.clone().add(x, y, z));
-		for(int x = 0; x <= bigSize; x += bigSize)
-			for(int z = 0; z <= bigSize; z++)
-				for(int y = 1; y <= mine.getHeight() + 1; y++)
-					locations.add(location.clone().add(x, y, z));
-		locations.add(location.clone().add(0, mine.getHeight() + 2, 0));
-		locations.add(location.clone().add(0, mine.getHeight() + 2, bigSize));
-		locations.add(location.clone().add(bigSize, mine.getHeight() + 2, 0));
-		locations.add(location.clone().add(bigSize, mine.getHeight() + 2, bigSize));
-		new BukkitRunnable() {
-			int index = 0;
-			
-			@Override
-			public void run() {
-				int min = index * (locations.size() / 4);
-				int max = Math.min(locations.size(), (index + 1) * (locations.size() / 4));
-				locations.subList(min, max).forEach(loc -> player.sendBlockChange(loc, Material.BEDROCK, (byte) 0));
-				if(max >= locations.size()) {
-					tempMines.put(player.getUniqueId(), new TempMine(mine, location, locations));
-					getCore().sendMsg(player, "PLACED_MINE", mine.getPrettyId());
-					cancel();
+				for(int z = 0; z <= bigSize; z++)
+					locations.add(location.clone().add(x, 0, z));
+			for(int z = 0; z <= bigSize; z += bigSize)
+				for(int x = 0; x <= bigSize; x++)
+					for(int y = 1; y <= mine.getHeight() + 1; y++)
+						locations.add(location.clone().add(x, y, z));
+			for(int x = 0; x <= bigSize; x += bigSize)
+				for(int z = 0; z <= bigSize; z++)
+					for(int y = 1; y <= mine.getHeight() + 1; y++)
+						locations.add(location.clone().add(x, y, z));
+			locations.add(location.clone().add(0, mine.getHeight() + 2, 0));
+			locations.add(location.clone().add(0, mine.getHeight() + 2, bigSize));
+			locations.add(location.clone().add(bigSize, mine.getHeight() + 2, 0));
+			locations.add(location.clone().add(bigSize, mine.getHeight() + 2, bigSize));
+			new BukkitRunnable() {
+				int index = 0;
+				
+				@Override
+				public void run() {
+					int min = (int) (index * (locations.size() * percent));
+					int max = Math.min(locations.size(), (int) ((index + 1) * (locations.size() * percent)));
+					locations.subList(min, max).forEach(loc -> BlockUtil.sendBlockChange(player, loc, Material.BEDROCK.getId(), (byte) 0));
+					if(max >= locations.size()) {
+						tempMines.put(player.getUniqueId(), new TempMine(mine, location, locations));
+						getCore().sendMsg(player, "PLACED_MINE", mine.getPrettyId());
+						cancel();
+					}
+					index++;
 				}
-				index++;
-			}
-		}.runTaskTimerAsynchronously(getCore(), 0, 10);
+			}.runTaskTimerAsynchronously(getCore(), 0, interval);
+		});
 	}
 	
 	public void confirmPlace(Player player) {
