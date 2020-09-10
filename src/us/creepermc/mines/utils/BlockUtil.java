@@ -8,6 +8,8 @@ public class BlockUtil {
 	public static void setBlockInNativeChunkSection(World world, int x, int y, int z, int blockId, byte data) {
 		WorldServer worldServer = ((CraftWorld) world).getHandle();
 		Chunk nmsChunk = worldServer.getChunkAt(x >> 4, z >> 4);
+		nmsChunk.f(true);
+		nmsChunk.mustSave = true;
 		IBlockData ibd = Block.getByCombinedId(blockId + (data << 12));
 		ChunkSection chunksection = nmsChunk.getSections()[y >> 4];
 		if(chunksection == null) chunksection = nmsChunk.getSections()[y >> 4] = new ChunkSection(y >> 4 << 4, !(nmsChunk.getWorld()).worldProvider.o());
