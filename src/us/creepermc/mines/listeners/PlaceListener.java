@@ -17,6 +17,7 @@ import us.creepermc.mines.managers.SuperiorSkyblockHook;
 import us.creepermc.mines.objects.Mine;
 import us.creepermc.mines.objects.TempMine;
 import us.creepermc.mines.templates.XListener;
+import us.creepermc.mines.utils.BlockUtil;
 import us.creepermc.mines.utils.Files;
 import us.creepermc.mines.utils.Util;
 
@@ -83,7 +84,7 @@ public class PlaceListener extends XListener {
 			case "no":
 			case "false":
 				TempMine mine = manager.getTempMines().remove(player.getUniqueId());
-				mine.getLocations().forEach(loc -> player.sendBlockChange(loc, Material.AIR, (byte) 0));
+				mine.getLocations().forEach(loc -> BlockUtil.setBlockInNativeChunkSection(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 0, (byte) 0));
 				getCore().sendMsg(player, "CANCELLED");
 				if(player.getInventory().firstEmpty() != -1) player.getInventory().addItem(mine.getMine().getItem());
 				else {
@@ -103,6 +104,7 @@ public class PlaceListener extends XListener {
 		TempMine mine = manager.getTempMines().remove(player.getUniqueId());
 		if(mine == null) return;
 		player.getInventory().addItem(mine.getMine().getItem());
+		mine.getLocations().forEach(loc -> BlockUtil.setBlockInNativeChunkSection(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 0, (byte) 0));
 	}
 	
 	@EventHandler
@@ -111,5 +113,6 @@ public class PlaceListener extends XListener {
 		TempMine mine = manager.getTempMines().remove(player.getUniqueId());
 		if(mine == null) return;
 		player.getInventory().addItem(mine.getMine().getItem());
+		mine.getLocations().forEach(loc -> BlockUtil.setBlockInNativeChunkSection(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 0, (byte) 0));
 	}
 }

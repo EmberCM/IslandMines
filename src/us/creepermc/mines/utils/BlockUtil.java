@@ -1,11 +1,8 @@
 package us.creepermc.mines.utils;
 
 import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.Player;
 
 public class BlockUtil {
 	public static void setBlockInNativeChunkSection(World world, int x, int y, int z, int blockId, byte data) {
@@ -26,12 +23,5 @@ public class BlockUtil {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
-	}
-	
-	public static void sendBlockChange(Player player, Location loc, int blockId, byte data) {
-		if(((CraftPlayer) player).getHandle().playerConnection == null) return;
-		PacketPlayOutBlockChange packet = new PacketPlayOutBlockChange(((CraftWorld) loc.getWorld()).getHandle(), new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
-		packet.block = Block.getByCombinedId(blockId + (data << 12));
-		((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
 	}
 }

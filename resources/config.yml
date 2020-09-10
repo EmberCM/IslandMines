@@ -4,10 +4,6 @@
 #                                         #
 ###########################################
 
-mine-preview:
-  interval: 10
-  percent: 25
-
 main-inventory:
   size: 27
   title: "&a&lYour Personal &2&lMine"
