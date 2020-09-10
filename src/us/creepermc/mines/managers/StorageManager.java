@@ -173,7 +173,7 @@ public class StorageManager extends XManager {
 		@Override
 		public void run() {
 			List<PlayerMine> reset = mines.stream().filter(mine ->
-					mine.isPastLifetime() || (mine.getPlaced().getChunk().isLoaded() && mine.getPlaced().getBlock().getType() != Material.BEDROCK)
+					mine.isPastLifetime() || (System.currentTimeMillis() - mine.getTimePlaced() >= 30000 && mine.getPlaced().getChunk().isLoaded() && mine.getPlaced().getBlock().getType() != Material.BEDROCK)
 			).collect(Collectors.toList());
 			if(!reset.isEmpty()) {
 				new BukkitRunnable() {
