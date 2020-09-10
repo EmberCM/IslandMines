@@ -99,14 +99,9 @@ public class PlayerMine {
 			for(int y = 1; y <= mine.getHeight(); y++)
 				for(int x = 1; x <= mine.getSize(); x++)
 					for(int z = 1; z <= mine.getSize(); z++) {
-						Block block;
-						try {
-							block = placed.clone().add(x, y, z).getBlock();
-						} catch(NullPointerException ex) {
-							continue;
-						}
-						if(block == null || block.getType() == upgrade.getData().getItemType()) continue;
-						BlockUtil.setBlockInNativeChunkSection(block.getWorld(), block.getX(), block.getY(), block.getZ(), upgrade.getData().getItemTypeId(), upgrade.getData().getData());
+						Location loc = placed.clone().add(x, y, z);
+						if(loc == null) continue;
+						BlockUtil.setBlockInNativeChunkSection(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), upgrade.getData().getItemTypeId(), upgrade.getData().getData());
 					}
 		});
 		Location teleport = getCenterLocation();
