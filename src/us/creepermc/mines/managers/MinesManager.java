@@ -119,9 +119,22 @@ public class MinesManager extends XManager {
 		locations.add(location.clone().add(0, mine.getHeight() + 2, bigSize));
 		locations.add(location.clone().add(bigSize, mine.getHeight() + 2, 0));
 		locations.add(location.clone().add(bigSize, mine.getHeight() + 2, bigSize));
-		locations.forEach(loc -> player.sendBlockChange(loc, Material.BEDROCK, (byte) 0));
-		tempMines.put(player.getUniqueId(), new TempMine(mine, location, locations));
-		getCore().sendMsg(player, "PLACED_MINE", mine.getPrettyId());
+		new BukkitRunnable() {
+			int index = 0;
+			
+			@Override
+			public void run() {
+				int min = index * (locations.size() / 4);
+				int max = Math.min(locations.size(), (index + 1) * (locations.size() / 4));
+				locations.subList(min, max).forEach(loc -> player.sendBlockChange(loc, Material.BEDROCK, (byte) 0));
+				if(max >= locations.size()) {
+					tempMines.put(player.getUniqueId(), new TempMine(mine, location, locations));
+					getCore().sendMsg(player, "PLACED_MINE", mine.getPrettyId());
+					cancel();
+				}
+				index++;
+			}
+		}.runTaskTimerAsynchronously(getCore(), 0, 10);
 	}
 	
 	public void confirmPlace(Player player) {
