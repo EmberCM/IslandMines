@@ -125,11 +125,16 @@ public class PlayerMine {
 		CompletableFuture.runAsync(() -> {
 			for(int x = 0; x <= mine.getSize() + 1; x++)
 				for(int z = 0; z <= mine.getSize() + 1; z++)
-					for(int y = 0; y <= mine.getHeight() + 2; y++) {
+					for(int y = 0; y <= mine.getHeight() + 1; y++) {
 						Location loc = placed.clone().add(x, y, z);
 						BlockUtil.setBlockInNativeChunkSection(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), 0, (byte) 0);
 					}
 		});
+		for(int x = 0; x <= mine.getSize() + 1; x++)
+			for(int z = 0; z <= mine.getSize() + 1; z++) {
+				Location loc = placed.clone().add(x, mine.getHeight() + 2, z);
+				loc.getBlock().setType(Material.AIR);
+			}
 		removed = true;
 	}
 	
