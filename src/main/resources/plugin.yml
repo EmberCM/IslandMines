@@ -1,9 +1,9 @@
-name: IslandMines
-main: us.creepermc.mines.Core
-author: Ember
-version: Alpha-1.0.8
-description: Personal Mines for players
-website: https://ember.zone
+name: ${artifactId}
+main: ${main}
+author: ${author}
+version: ${version}
+description: ${description}
+website: ${website}
 loadbefore: [ PickaxeUpgrades ]
 softdepend: [ HolographicDisplays, PlaceholderAPI, SuperiorSkyblock2 ]
 commands:
