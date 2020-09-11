@@ -3,6 +3,8 @@ package us.creepermc.mines.utils;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import us.creepermc.mines.objects.BlockUpdate;
 
 import java.util.Queue;
@@ -50,5 +52,9 @@ public class BlockUtil {
 				}
 			}
 		});
+	}
+	
+	public static void updateChunk(Player player, org.bukkit.Chunk chunk) {
+		((CraftPlayer) player).getHandle().chunkCoordIntPairQueue.add(new ChunkCoordIntPair(chunk.getX(), chunk.getZ()));
 	}
 }

@@ -6,10 +6,12 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.creepermc.mines.Core;
@@ -48,9 +50,11 @@ public class PlayerMine {
 		this.lastReset = 0;
 	}
 	
-	public void initialize(Core core) {
+	public void initialize(Core core, Player player) {
 		createSigns(core);
-		reset(core.getManager(MinesManager.class).getBlocksPerTick());
+		int bpt = core.getManager(MinesManager.class).getBlocksPerTick();
+		reset(bpt);
+		updateChunks(core, player, mine.getSize() * 2 * mine.getHeight() / bpt + 20);
 	}
 	
 	private void createSigns(Core core) {
@@ -121,7 +125,7 @@ public class PlayerMine {
 		reset(blocksPerTick, false);
 	}
 	
-	public void clear() {
+	public void clear(Core core, Player player) {
 		CompletableFuture.runAsync(() -> {
 			for(int x = 0; x <= mine.getSize() + 1; x++)
 				for(int z = 0; z <= mine.getSize() + 1; z++)
@@ -135,7 +139,21 @@ public class PlayerMine {
 				Location loc = placed.clone().add(x, mine.getHeight() + 2, z);
 				loc.getBlock().setType(Material.AIR);
 			}
+		updateChunks(core, player, 60);
 		removed = true;
+	}
+	
+	private void updateChunks(Core core, Player player, int delay) {
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				List<Chunk> chunks = new ArrayList<>();
+				for(int x = 1; x <= mine.getSize(); x += 16)
+					for(int z = 1; z <= mine.getSize(); z += 16)
+						chunks.add(placed.clone().add(x, 0, z).getChunk());
+				chunks.forEach(chunk -> BlockUtil.updateChunk(player, chunk));
+			}
+		}.runTaskLaterAsynchronously(core, delay);
 	}
 	
 	public Location getCenterLocation() {

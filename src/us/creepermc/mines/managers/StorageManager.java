@@ -69,11 +69,11 @@ public class StorageManager extends XManager {
 	public void createMine(Mine mine, Player player, Location location) {
 		PlayerMine pmine = new PlayerMine(player.getUniqueId(), mine, location);
 		mines.add(pmine);
-		pmine.initialize(getCore());
+		pmine.initialize(getCore(), player);
 	}
 	
 	public void deleteMine(PlayerMine mine, Player player, boolean giveBack) {
-		mine.clear();
+		mine.clear(getCore(), player);
 		if(getCore().isUsingHD()) HolographicDisplaysHook.deleteHologram(getCore(), mine);
 		mines.remove(mine);
 		if(player == null) return;
