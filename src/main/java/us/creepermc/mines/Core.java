@@ -7,6 +7,14 @@ import lombok.experimental.FieldDefaults;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import us.creepermc.mines.cmds.IslandMinesCmd;
+import us.creepermc.mines.listeners.BlockListener;
+import us.creepermc.mines.listeners.InteractListener;
+import us.creepermc.mines.listeners.PlaceListener;
+import us.creepermc.mines.managers.*;
+import us.creepermc.mines.templates.XCommand;
+import us.creepermc.mines.templates.XListener;
 import us.creepermc.mines.templates.XManager;
 import us.creepermc.mines.utils.Files;
 import us.creepermc.mines.utils.Util;
@@ -21,7 +29,6 @@ import java.util.*;
 public class Core extends JavaPlugin {
 	final List<XManager> managers = new ArrayList<>();
 	final List<Files.XFile<?>> send = new ArrayList<>();
-	String allowed;
 	
 	boolean usingHD;
 	boolean usingPAPI;
@@ -34,7 +41,30 @@ public class Core extends JavaPlugin {
 		
 		initConfig();
 		
-		Util.registerHooks(this);
+		Core c = this;
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				managers.addAll(Arrays.asList(
+						new ConfirmRemoveGUI(c),
+						new MainInvManager(c),
+						new MinesManager(c),
+						new StorageInvManager(c),
+						new StorageManager(c),
+						new UpgradeInvManager(c),
+						new WorthManager(c),
+						new IslandMinesCmd(c),
+						new BlockListener(c),
+						new InteractListener(c),
+						new PlaceListener(c)
+				));
+				managers.forEach(manager -> {
+					if(manager instanceof XCommand) c.getCommand(((XCommand) manager).getCommand()).setExecutor((XCommand) manager);
+					if(manager instanceof XListener) c.getServer().getPluginManager().registerEvents((XListener) manager, c);
+					manager.initialize();
+				});
+			}
+		}.runTaskAsynchronously(this);
 		econ = Util.setupVault(Economy.class);
 		usingHD = getServer().getPluginManager().isPluginEnabled("HolographicDisplays");
 		usingPAPI = getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
@@ -49,7 +79,6 @@ public class Core extends JavaPlugin {
 		managers.clear();
 		send.stream().map(Files.XFile::getStorage).forEach(Map::clear);
 		send.clear();
-		allowed = null;
 		usingHD = false;
 		usingPAPI = false;
 		usingSSB = false;

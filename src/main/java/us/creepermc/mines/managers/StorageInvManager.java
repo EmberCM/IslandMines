@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import us.creepermc.mines.Core;
 import us.creepermc.mines.objects.Mine;
 import us.creepermc.mines.objects.PlayerMine;
@@ -55,7 +56,7 @@ public class StorageInvManager extends XListener {
 		storageManager = null;
 	}
 	
-	public XInv getInventory(Inventory inventory) {
+	public XInv getInventory(InventoryView inventory) {
 		return inventories.values().stream().filter(inv -> inventory.getTitle().equals(inv.getInventory().getTitle())).findFirst().orElse(null);
 	}
 	
@@ -84,7 +85,7 @@ public class StorageInvManager extends XListener {
 	@EventHandler
 	public void inventoryClick(InventoryClickEvent event) {
 		if(event.getInventory() == null) return;
-		XInv inventory = getInventory(event.getInventory());
+		XInv inventory = getInventory(event.getView());
 		if(inventory == null) return;
 		event.setCancelled(true);
 		if(inventory.getMenuItems().isEmpty()) return;

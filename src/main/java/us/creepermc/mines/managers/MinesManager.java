@@ -18,6 +18,7 @@ import us.creepermc.mines.templates.XManager;
 import us.creepermc.mines.utils.BlockUtil;
 import us.creepermc.mines.utils.Files;
 import us.creepermc.mines.utils.Util;
+import us.creepermc.mines.utils.XMaterial;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -94,12 +95,13 @@ public class MinesManager extends XManager {
 	}
 	
 	public Location isLocationAvailable(Location location, Mine mine) {
+		Material air = XMaterial.AIR.parseMaterial();
 		for(int x = 0; x < mine.getSize() + 2; x++)
 			for(int y = 0; y < mine.getHeight() + 2; y++)
 				for(int z = 0; z < mine.getSize() + 2; z++) {
 					if(x == 0 && y == 0 && z == 0) continue;
 					Location loc = location.clone().add(x, y, z);
-					if(loc.getBlock().getType() != Material.AIR) return loc;
+					if(loc.getBlock().getType() != air) return loc;
 				}
 		return null;
 	}
@@ -123,7 +125,8 @@ public class MinesManager extends XManager {
 			locations.add(location.clone().add(0, mine.getHeight() + 2, bigSize));
 			locations.add(location.clone().add(bigSize, mine.getHeight() + 2, 0));
 			locations.add(location.clone().add(bigSize, mine.getHeight() + 2, bigSize));
-			Queue<BlockUpdate> queue = locations.stream().map(loc -> new BlockUpdate(loc, Material.BEDROCK.getId(), (byte) 0)).collect(Collectors.toCollection(LinkedList::new));
+			int bedrock = XMaterial.BEDROCK.parseMaterial().getId();
+			Queue<BlockUpdate> queue = locations.stream().map(loc -> new BlockUpdate(loc, bedrock, (byte) 0)).collect(Collectors.toCollection(LinkedList::new));
 			BlockUtil.queueBlockUpdates(queue, Math.max(1, blocksPerTick));
 			try {
 				Thread.sleep(locations.size() / blocksPerTick * 50);

@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import us.creepermc.mines.Core;
 import us.creepermc.mines.managers.MinesManager;
 import us.creepermc.mines.utils.BlockUtil;
+import us.creepermc.mines.utils.XMaterial;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -61,7 +62,7 @@ public class PlayerMine {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				int wallId = Material.WALL_SIGN.getId();
+				int wallId = XMaterial.WALL_SIGN.parseMaterial().getId();
 				Block block1 = placed.clone().add(0, mine.getHeight() + 2, 1).getBlock();
 				BlockUtil.setBlockInNativeChunkSection(block1.getWorld(), block1.getX(), block1.getY(), block1.getZ(), wallId, (byte) 3);
 				Block block2 = placed.clone().add(1, mine.getHeight() + 2, 0).getBlock();
@@ -109,7 +110,7 @@ public class PlayerMine {
 					for(int z = 1; z <= mine.getSize(); z++) {
 						Location loc = placed.clone().add(x, y, z);
 						if(loc == null) continue;
-						blocks.add(new BlockUpdate(loc, upgrade.getData().getItemTypeId(), upgrade.getData().getData()));
+						blocks.add(new BlockUpdate(loc, upgrade.getData().getItemType().getId(), upgrade.getData().getData()));
 					}
 			BlockUtil.queueBlockUpdates(blocks, blocksPerTick);
 			try {

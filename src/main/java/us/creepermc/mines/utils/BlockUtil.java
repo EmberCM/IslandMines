@@ -16,10 +16,13 @@ public class BlockUtil {
 		Chunk nmsChunk = worldServer.getChunkAt(x >> 4, z >> 4);
 		nmsChunk.f(true);
 		nmsChunk.mustSave = true;
+//		nmsChunk.setNeedsSaving(true);
 		IBlockData ibd = Block.getByCombinedId(blockId + (data << 12));
 		ChunkSection chunksection = nmsChunk.getSections()[y >> 4];
 		if(chunksection == null) chunksection = nmsChunk.getSections()[y >> 4] = new ChunkSection(y >> 4 << 4, !(nmsChunk.getWorld()).worldProvider.o());
 		chunksection.setType(x & 0xF, y & 0xF, z & 0xF, ibd);
+//		BlockPosition bp = new BlockPosition(x, y, z);
+//		worldServer.setTypeAndData(bp, ibd, 2);
 		notify(world, x, y, z);
 	}
 	
@@ -33,6 +36,8 @@ public class BlockUtil {
 			WorldServer worldServer = ((CraftWorld) world).getHandle();
 			PlayerChunkMap playerChunkMap = worldServer.getPlayerChunkMap();
 			playerChunkMap.flagDirty(new BlockPosition(x, y, z));
+//			ChunkProviderServer chunkProvider = worldServer.getChunkProvider();
+//			chunkProvider.flagDirty(new BlockPosition(x, y, z));
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}

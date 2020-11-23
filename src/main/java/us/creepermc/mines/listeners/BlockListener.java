@@ -17,6 +17,7 @@ import us.creepermc.mines.managers.SuperiorSkyblockHook;
 import us.creepermc.mines.objects.PlayerMine;
 import us.creepermc.mines.templates.XListener;
 import us.creepermc.mines.utils.BlockUtil;
+import us.creepermc.mines.utils.XMaterial;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -53,7 +54,10 @@ public class BlockListener extends XListener {
 		}
 		event.setCancelled(!player.hasPermission("islandmines.admin"));
 		Block block = event.getBlock();
-		boolean redstoneMatch = block.getType() == Material.GLOWING_REDSTONE_ORE && mine.getUpgrade().getData().getItemType() == Material.REDSTONE_ORE;
+		Material parsed = XMaterial.fromString(block.getType().toString()).parseMaterial();
+		Material redstoneOre = XMaterial.REDSTONE_ORE.parseMaterial();
+		// Match redstone to check the glowing redstone ore case
+		boolean redstoneMatch = parsed == redstoneOre && mine.getUpgrade().getData().getItemType() == redstoneOre;
 		if(!block.getState().getData().equals(mine.getUpgrade().getData()) && !redstoneMatch) return;
 		mine.addProgress();
 		int amount = hasFortune(player.getItemInHand()) ? ThreadLocalRandom.current().nextInt(getFortune(player.getItemInHand()) + 1) + 1 : 1;
@@ -72,7 +76,7 @@ public class BlockListener extends XListener {
 	@EventHandler
 	public void explode(EntityExplodeEvent event) {
 		List<Block> remove = event.blockList().stream()
-				.filter(block -> block.getType() == Material.WALL_SIGN && storageManager.getMine(block.getLocation()) != null)
+				.filter(block -> block.getType() == XMaterial.WALL_SIGN.parseMaterial() && storageManager.getMine(block.getLocation()) != null)
 				.collect(Collectors.toList());
 		event.blockList().removeAll(remove);
 	}

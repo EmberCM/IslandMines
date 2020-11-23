@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import us.creepermc.mines.Core;
 import us.creepermc.mines.objects.*;
@@ -63,7 +64,7 @@ public class UpgradeInvManager extends XListener {
 		storageManager = null;
 	}
 	
-	private Entry<Mine, XInv> getInventory(Inventory inventory) {
+	private Entry<Mine, XInv> getInventory(InventoryView inventory) {
 		return inventories.entrySet().stream().filter(entry -> inventory.getTitle().equals(entry.getValue().getInventory().getTitle())).findFirst().orElse(null);
 	}
 	
@@ -96,7 +97,7 @@ public class UpgradeInvManager extends XListener {
 	@EventHandler
 	public void inventoryClick(InventoryClickEvent event) {
 		if(event.getInventory() == null) return;
-		Entry<Mine, XInv> entry = getInventory(event.getInventory());
+		Entry<Mine, XInv> entry = getInventory(event.getView());
 		if(entry == null) return;
 		event.setCancelled(true);
 		UpgradeItems items = getUpgradeItems(entry.getKey(), event.getRawSlot());

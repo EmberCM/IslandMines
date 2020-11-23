@@ -931,7 +931,7 @@ public enum XMaterial {
 		return isDamageable(xmat) && this.parseMaterial() == comp.getType();
 	}
 	
-	public XMaterial fromMaterial(Material mat) {
+	public static XMaterial fromMaterial(Material mat) {
 		try {
 			return XMaterial.valueOf(mat.toString());
 		} catch(IllegalArgumentException e) {

@@ -16,6 +16,7 @@ import us.creepermc.mines.objects.Upgrade;
 import us.creepermc.mines.templates.XManager;
 import us.creepermc.mines.utils.Files;
 import us.creepermc.mines.utils.Util;
+import us.creepermc.mines.utils.XMaterial;
 
 import java.io.FileReader;
 import java.nio.file.Paths;
@@ -172,7 +173,7 @@ public class StorageManager extends XManager {
 		@Override
 		public void run() {
 			List<PlayerMine> reset = mines.stream().filter(mine ->
-					mine.isPastLifetime() || (System.currentTimeMillis() - mine.getTimePlaced() >= 30000 && mine.getPlaced().getChunk().isLoaded() && mine.getPlaced().getBlock().getType() != Material.BEDROCK)
+					mine.isPastLifetime() || (System.currentTimeMillis() - mine.getTimePlaced() >= 30000 && mine.getPlaced().getChunk().isLoaded() && mine.getPlaced().getBlock().getType() != XMaterial.BEDROCK.parseMaterial())
 			).collect(Collectors.toList());
 			if(!reset.isEmpty()) {
 				new BukkitRunnable() {
