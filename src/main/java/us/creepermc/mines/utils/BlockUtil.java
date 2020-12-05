@@ -7,7 +7,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import us.creepermc.mines.objects.BlockUpdate;
 
-import java.util.Queue;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.CompletableFuture;
 
 public class BlockUtil {
@@ -43,7 +43,7 @@ public class BlockUtil {
 		}
 	}
 	
-	public static void queueBlockUpdates(Queue<BlockUpdate> blocks, int amountPerTick) {
+	public static void queueBlockUpdates(BlockingDeque<BlockUpdate> blocks, int amountPerTick) {
 		CompletableFuture.runAsync(() -> {
 			int index = 0;
 			while(!blocks.isEmpty()) {

@@ -21,7 +21,9 @@ import us.creepermc.mines.utils.Util;
 import us.creepermc.mines.utils.XMaterial;
 
 import java.util.*;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
 
 @Getter
@@ -126,7 +128,7 @@ public class MinesManager extends XManager {
 			locations.add(location.clone().add(bigSize, mine.getHeight() + 2, 0));
 			locations.add(location.clone().add(bigSize, mine.getHeight() + 2, bigSize));
 			int bedrock = XMaterial.BEDROCK.parseMaterial().getId();
-			Queue<BlockUpdate> queue = locations.stream().map(loc -> new BlockUpdate(loc, bedrock, (byte) 0)).collect(Collectors.toCollection(LinkedList::new));
+			BlockingDeque<BlockUpdate> queue = locations.stream().map(loc -> new BlockUpdate(loc, bedrock, (byte) 0)).collect(Collectors.toCollection(LinkedBlockingDeque::new));
 			BlockUtil.queueBlockUpdates(queue, Math.max(1, blocksPerTick));
 			try {
 				Thread.sleep(locations.size() / blocksPerTick * 50);

@@ -20,7 +20,9 @@ import us.creepermc.mines.utils.BlockUtil;
 import us.creepermc.mines.utils.XMaterial;
 
 import java.util.*;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.LinkedBlockingDeque;
 
 @Getter
 @AllArgsConstructor
@@ -104,7 +106,7 @@ public class PlayerMine {
 		if(removed) return;
 		if(setTime) lastReset = System.currentTimeMillis();
 		CompletableFuture.runAsync(() -> {
-			Queue<BlockUpdate> blocks = new LinkedList<>();
+			BlockingDeque<BlockUpdate> blocks = new LinkedBlockingDeque<>();
 			for(int y = 1; y <= mine.getHeight(); y++)
 				for(int x = 1; x <= mine.getSize(); x++)
 					for(int z = 1; z <= mine.getSize(); z++) {
